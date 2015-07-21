@@ -1,0 +1,4 @@
+special="\n
+call=S(${{i}},${{j}},${{c}})
+stsep=;
+template=[[def S(i,j,c){print"${{dna}}".substring(i,j)+(Character)c;};${{calls}}]]

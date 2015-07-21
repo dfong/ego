@@ -1,0 +1,8 @@
+obs
+*.out
+*.o
+*.class
+*.pyc
+*.dump
+*.beam
+*.exe

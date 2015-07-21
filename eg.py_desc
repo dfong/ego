@@ -1,0 +1,7 @@
+special="\n
+call=S(${{i}},${{j}},${{c}})
+stsep=;
+template=[[import sys
+def S(i,j,c):
+  sys.stdout.write("""${{dna}}"""[i:j]+chr(c))
+${{calls}}]]

@@ -1,0 +1,5 @@
+stsep=;
+inclusive=1
+call=[[S ${{i}} ${{j}} ${{c}}]]
+template=[[proc S {i j c} {puts -nonewline [format %s%c [string range {${{dna}}} $i $j] $c]}
+${{calls}}]]

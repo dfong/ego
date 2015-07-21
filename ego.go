@@ -1,0 +1,1 @@
+package main;import"fmt";func S(i int,n int,c int){fmt.Printf("%s%c","package main;importfmt;func S(i int,n int,c int){fmt.Printf(%s%c,[i:i+n],c);};func main(){S(0,19,34);S(19,3,34);S(22,38,34);S(60,4,34);S(64,1,34);S(0,172,34);S(65,107,10);}"[i:i+n],c);};func main(){S(0,19,34);S(19,3,34);S(22,38,34);S(60,4,34);S(64,1,34);S(0,172,34);S(65,107,10);}

@@ -1,0 +1,4 @@
+special="
+stsep=
+call=(S ${{i}} ${{j}} ${{c}})
+template=[[(defun S(i j c)(list(write-string(subseq "${{dna}}" i j))(write-char(code-char c))))${{calls}}]]

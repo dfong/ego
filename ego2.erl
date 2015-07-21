@@ -1,0 +1,1 @@
+-module(ego). -export([main/0]). s(A,B,C)->io:fwrite("~s~c",[string:substr("-module(ego). -export([main/0]). s(A,B,C)->io:fwrite(~s~c,[string:substr(,A,B),C]). main()->s(1,53,34),s(54,4,34),s(58,16,34),s(1,150,34),s(74,86,10).",A,B),C]). main()->s(1,53,34),s(54,4,34),s(58,16,34),s(1,150,34),s(74,86,10).

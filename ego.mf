@@ -1,0 +1,24 @@
+.PHONY: x
+x:;@true
+define A
+.PHONY: x
+x:;@true
+endef
+define Z
+$(info $(value A))
+$(info define A)
+$(info $(value A))
+$(info endef)
+$(info define Z)
+$(info $(value Z))
+$(info endef)
+$(info $(value Z))
+endef
+$(info $(value A))
+$(info define A)
+$(info $(value A))
+$(info endef)
+$(info define Z)
+$(info $(value Z))
+$(info endef)
+$(info $(value Z))

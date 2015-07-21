@@ -1,0 +1,1 @@
+public class ego{static void s(int a,int b,int c){System.out.print("public class ego{static void s(int a,int b,int c){System.out.print(.substring(a,a+b));System.out.print((char)c);}public static void main(String[]x){s(0,67,34);s(0,186,34);s(67,119,10);}}".substring(a,a+b));System.out.print((char)c);}public static void main(String[]x){s(0,67,34);s(0,186,34);s(67,119,10);}}

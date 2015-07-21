@@ -1,0 +1,52 @@
+#! /bin/bash
+#	xrun SRCFILE
+# cross-language runner script, helps the makefile.
+# may leave detritus which should be cleaned by Makefile.
+#
+# example:
+#	xrun ego.py
+#	xrun ego.c
+
+erun()
+{
+	typeset prog="$1"
+
+	line=$(head -1 "$prog")
+	if [[ $line =~ module ]]; then
+		# use plain erl if the prog begins with a module statement.
+		prog=${prog%.erl}
+		/bin/rm -f $prog.beam
+		erl -compile $prog || return 1
+		erl -noshell -s $prog main -s init stop
+	else
+		escript $prog
+	fi
+}
+
+compile_and_run()
+{
+	F="$1"; shift
+	ext=${F##*.}
+	base=${F%.*}
+
+	case "$ext" in
+	awk) awk -f $F;;
+	bash) bash $F;;
+	c) cc -w -o $base.exe $F && (./$base.exe||true);;
+	cpp) g++ -o $base-.exe $F && (./$base-.exe||true);;
+	erl) erun $F;;
+	go) go run $F;;
+	gvy|groovy) groovy $F;;
+	java) javac $F && java $base;;
+	mf) make -s -f $F;;
+	pl) perl $F;;
+	py) python $F;;
+	lisp) clisp $F;;
+	rb) ruby $F;;
+	tcl) tclsh $F;;
+	m4) m4 $F;;
+	*) echo "error: unknown file type .$ext";;
+	esac
+}
+
+compile_and_run "$1"

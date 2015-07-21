@@ -1,0 +1,5 @@
+special='\n
+rangelen=1
+template=[[sub g{print substr('${dna}',$_[0],$_[1]),chr($_[2])}${calls}]]
+stsep=;
+call=g(${i},${j},${c})

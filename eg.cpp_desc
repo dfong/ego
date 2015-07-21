@@ -1,0 +1,5 @@
+special="\n
+call=[[S(${{i}},${{j}},${{c}})]]
+stsep=;
+template=[[#include<stdio.h>
+void S(int i,int j,int c){while(i<j)putchar("${{dna}}"[i++]);putchar(c);}int main(){${{calls}};}]]

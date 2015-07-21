@@ -1,0 +1,7 @@
+special="
+index1=1
+rangelen=1
+stsep=,
+call=s(${{i}},${{j}},${{c}})
+template=[[
+s(A,B,C)->io:fwrite(string:concat(string:substr("${{dna}}",A,B),[C])). main(_)->${{calls}}.]]

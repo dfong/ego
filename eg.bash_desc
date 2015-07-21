@@ -1,0 +1,6 @@
+special='\n
+stsep=;
+rangelen=1
+octchar=1
+template=[[S(){ X='${{dna}}';echo -n ${X:$1:$2};printf \\${3:-47};};${{calls}}]]
+call=S ${{i}} ${{j}} ${{c}}

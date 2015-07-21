@@ -1,0 +1,4 @@
+special="\n
+stsep=;
+template=[[S(i,j,c){while(i<j)putchar("${{dna}}"[i++]);putchar(c);}main(){${{calls}};}]]
+call=S(${{i}},${{j}},${{c}})

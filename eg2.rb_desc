@@ -1,0 +1,4 @@
+special="\n
+template=[[def S(i,j,c)print("${dna}"[i,j],c.chr);end;${calls}]]
+call=S(${i},${j},${c})
+stsep=;

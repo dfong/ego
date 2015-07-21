@@ -1,0 +1,5 @@
+special="\n
+stsep=;
+call=S(${{i}},${{j}},${{c}})
+rangelen=1
+template=[[package main;import"fmt";func S(i int,n int,c int){fmt.Printf("%s%c","${{dna}}"[i:i+n],c);};func main(){${{calls}}}]]

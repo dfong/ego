@@ -1,0 +1,6 @@
+special="
+index1=1
+rangelen=1
+call=S(${{i}},${{j}},${{c}})
+stsep=;
+template=[[function S(i,j,c){printf("%s%c",substr("${{dna}}",i,j),c)}BEGIN{${{calls}};}]]

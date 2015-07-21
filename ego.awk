@@ -1,0 +1,1 @@
+function S(i,j,c){printf("%s%c",substr("function S(i,j,c){printf(%s%c,substr(,i,j),c)}BEGIN{S(1,25,34);S(26,4,34);S(30,8,34);S(1,110,34);S(38,73,10);}",i,j),c)}BEGIN{S(1,25,34);S(26,4,34);S(30,8,34);S(1,110,34);S(38,73,10);}

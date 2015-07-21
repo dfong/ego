@@ -1,0 +1,5 @@
+special="\n
+call=s(${{i}},${{j}},${{c}})
+stsep=;
+rangelen=1
+template=[[public class gen_ego{static void s(int a,int b,int c){System.out.print("${{dna}}".substring(a,a+b));System.out.print((char)c);}public static void main(String[]x){${{calls}};}}]]

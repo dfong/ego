@@ -1,0 +1,266 @@
+#! /usr/bin/perl -s
+#	eggen < DESC
+# naive generator for a self-printing program.
+# this is not guaranteed to be the shortest
+# such program, but it should at least work.
+#
+# there are some hidden assumptions about the
+# structure of the program and the template.
+# this only works for templates that follow
+# one of two styles:
+#	(A) STUFF...STRING...CALLS
+#	(B) DEFINITIONS...EXPANSIONS...
+# so it is not fully general.  the DESC tells
+# which style applies, the template, etc.
+#
+# the generator's template language is not well
+# specified and may be unable to express certain
+# programs in certain languages.
+#
+
+use Data::Dumper;
+
+# debug flag
+$opt_d = $d || 0;
+
+# this can be changed if necessary
+$STARTQUOTE="[[";
+$ENDQUOTE="]]";
+
+%M = (
+	b => "\b",
+	e => "\33",
+	f => "\f",
+	n => "\n",
+	r => "\r",
+	t => "\t",
+	'\\' => "\\",
+	);
+
+# interpret one escape sequence
+sub escc
+{
+	my $c = shift;
+	if ($c =~ m/\d+/) {
+		return chr(oct($c));
+	}
+	elsif ($c =~ s/^x//i) {
+		return chr(hex($c));
+	}
+	else {
+		return ($M{$c} || $c);
+	}
+}
+
+# interpret escape sequences in a string
+sub escapes
+{
+	my $s = shift;
+	$s =~ s/\\(\d{1,3}|x\w\w|.)/escc($1)/ge;
+	return $s;
+}
+
+#
+# read the description file.
+# each item is of the form VAR=VALUE
+# the VALUE string can contain newlines if bracketed by [[ and ]].
+# the VARs special and stsep may contain escape sequences (like \n).
+#
+sub readin
+{
+	my $inquote;
+	my $var;
+	my $r = {};
+
+	while (<>) {
+		if ($inquote) {
+			if (s/\Q$ENDQUOTE\E\s*$//) {
+				# end of bracketed string
+				$r->{$var} .= $_;
+				$inquote = 0;
+				next;
+			}
+			# bracketed string continuation
+			$r->{$var} .= $_;
+			next;
+		}
+		next if m/^#/;
+		chomp;
+		if (my ($xvar, $xval) = split(m/\s*=\s*/, $_, 2)) {
+			$var = $xvar;
+			if ($xval =~ s/^\Q$STARTQUOTE\E//) {
+				$inquote = 1;
+				if ($xval =~ s/\Q$ENDQUOTE\E\s*$//) {
+					$inquote = 0;
+				}
+			}
+			$val = $xval;
+			$r->{$var} = $val;
+			if ($inquote) {
+				$r->{$var} .= "\n";
+			}
+		}
+	}
+	return $r;
+}
+
+# construct a call to print the dna string from $i to $j, followed by $c
+sub expandcall
+{
+	my $dict = shift;
+	my ($i, $j, $c) = @_;
+
+	print STDERR "expandcall(, $i, $j, $c)\n" if $opt_d;
+
+	if ($dict->{octchar}) { $c = sprintf("%o", $c); }
+
+	if ($dict->{index1}) {
+		$i += 1;
+		$j += 1;
+	}
+	if ($dict->{inclusive}) {
+		$j -= 1;
+	}
+	elsif ($dict->{rangelen}) {
+		$j -= $i;
+	}
+
+	$dict->{i} = ($i);
+	$dict->{j} = ($j);
+	$dict->{c} = ($c);
+
+	return interp($dict->{call}, $dict);
+}
+
+sub mkprog
+{
+	my $obj = shift;
+	if ($obj->{fragsep} ne '') {
+		return mkprog_macro($obj);
+	}
+	else {
+		return mkprog_simple($obj);
+	}
+}
+
+sub mkprog_macro
+{
+	my $obj = shift;
+	my @frags = split(m/$obj->{fragsep}/, $obj->{template});
+	print STDERR "frags = ", join(" ", map("[$_]", @frags)), "\n" if $opt_d;
+
+	# each fragment is available for expansion as ${{k}}
+	for (my $i = 1; $i <= @frags; $i++) {
+		$obj->{"$i"} = $frags[$i-1];
+	}
+
+	my $ret = join('', map(interp($_, $obj), @frags));
+	$ret =~ s/\n*\Z/\n/;
+	return $ret;
+}
+
+sub mkprog_simple
+{
+	my $obj = shift;
+	my $dict = {%$obj};
+
+	$dict->{stsep} = escapes($dict->{stsep});
+	$dict->{special} = escapes($dict->{special});
+
+	my $template = $dict->{template};
+	$template =~ s/\n*\Z//;
+	$template .= "\n";
+
+	# variables eligible for interpolation
+	my @frags;
+	if ($dict->{special} eq '') {
+		@frags = ($template =~ m/(.*)(.)(\${{dna}})(.)(.*)/s);
+	}
+	else {
+		@frags = split(m/([$dict->{special}])/s, $template);
+	}
+	if (@frags % 2 != 0) {
+		$frags[-1] =~ s/\n\Z//;
+		push @frags, "\n";
+	}
+
+	print STDERR "n = $n\n" if $opt_d;
+
+	print STDERR "special = [[$dict->{special}]]\n" if $opt_d;
+	print STDERR "frags = ", join(" ", map("[$_]", @frags)), "\n" if $opt_d;
+
+	# keep recalculating until the callstring converges to a stable value
+	$dict->{dna} = '';
+	$dict->{calls} = '';
+	my $oldcalls = "X";
+	while ($oldcalls ne $dict->{calls}) {
+		$oldcalls = $dict->{calls};
+		fragloop($dict, \@frags);
+	}
+
+	return interp($template, $dict);
+}
+
+# expand every occurrence of ${{VAR}} to the value of VAR in dict.
+sub interp
+{
+	my ($s, $dict) = @_;
+	$s =~ s/\${{(\w+)}}/$dict->{$1}/egs;
+	return $s;
+}
+
+sub fragloop
+{
+	my ($dict, $frags) = @_;
+
+	my $end = length $dict->{dna};
+	my @dna = ();
+	my @calls = ();
+
+	#
+	# the dna variable starts out fresh each time,
+	# and won't be expanded here.  however, its value
+	# will be recalculated and stored at the end for
+	# later use.
+	#
+	$dict->{dna} = '';
+
+	#
+	# the calls variable has its value from the last iteration.
+	# it will retain that value through the loop.
+	# at the end the new value will be stored.
+	#
+
+	my $i = $j = 0;
+
+	for (my $k = 0; $k < @$frags; $k += 2) {
+
+		my $fk = $frags->[$k];
+		my $c = ord($frags->[$k+1]);
+
+		my $pk = interp($fk, $dict);
+		push @dna, $pk;
+
+		$i = $j;
+		$j += length $pk;
+
+		my $callk;
+		if ($fk eq '${{dna}}')
+			{$callk = expandcall($dict, 0, $end, $c); $j = $i;}
+		else
+			{$callk = expandcall($dict, $i, $j, $c);}
+		push @calls, $callk;
+	}
+
+	$dict->{dna} = join('', @dna);
+	$dict->{calls} = join($dict->{stsep}, @calls);
+	print STDERR "calls = $dict->{calls}\n" if $opt_d;
+}
+
+sub main
+{
+	print mkprog(readin());
+}
+
+# ----- start of mainline code
+main();
