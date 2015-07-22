@@ -10,7 +10,7 @@ PPTESTER=./pptest
 .PHONY: default all clean cppong table gentest manual generated
 .PHONY: %.cmp gen_%
 
-FILES:= \
+FILES := \
 	ego.c \
 	ego.cpp \
 	ego.pl \
@@ -24,8 +24,10 @@ FILES:= \
 	ego.awk \
 	ego.mf
 
-FILE_TARGETS := $(FILES:%=%.cmp)
-GEN_TARGETS := $(patsubst eg.%_desc, gen_%, $(wildcard eg.*_desc))
+DOABLE_FILES := $(shell hascomp $(FILES))
+
+FILE_TARGETS := $(DOABLE_FILES:%=%.cmp)
+GEN_TARGETS := $(patsubst eg.%_desc, gen_%, $(shell hascomp $(wildcard eg.*_desc)))
 
 all: manual generated ppongs;
 
@@ -43,7 +45,9 @@ gen_%: eg.%_desc
 %.ppong: %
 	$(PPTESTER) $<
 
-ppongs: ppong.c.ppong
+PPFILE=$(if $(shell hascomp ppong.c),ppong.c.ppong,)
+
+ppongs: $(PPFILE)
 
 table: clean
 	@wc -c $(FILES) | sort -n

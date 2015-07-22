@@ -38,15 +38,16 @@ compile_and_run()
 	go) go run $F;;
 	gvy|groovy) groovy $F;;
 	java) javac $F && java $base;;
-	mf) make -s -f $F;;
+	mf) make -s --no-print-directory -f $F;;
 	pl) perl $F;;
 	py) python $F;;
 	lisp) clisp $F;;
 	rb) ruby $F;;
 	tcl) tclsh $F;;
 	m4) m4 $F;;
-	*) echo "error: unknown file type .$ext";;
+	*) "error: unknown file type .$ext"; return 1;;
 	esac
+	return 0
 }
 
 compile_and_run "$1"

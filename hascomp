@@ -1,0 +1,47 @@
+#! /bin/bash
+#	cancompile FILES
+# print the names of the FILES that can be compiled on this host.
+# files without a compiler are reported on stderr.
+
+get_ext()
+{
+	# remove _desc if present
+	typeset fn="${1%_desc}"
+	echo ${fn##*.}
+}
+
+trycmd()
+{
+	which $1 >/dev/null 2>&1
+}
+
+has_compiler()
+{
+	case $(get_ext "$1") in
+	awk) trycmd awk;;
+	bash) trycmd bash;;
+	c) trycmd cc;;
+	cpp) trycmd g++;;
+	erl) trycmd erl;;
+	go) trycmd go;;
+	gvy|groovy) trycmd groovy;;
+	java) trycmd javac;;
+	mf) trycmd make ;;
+	pl) trycmd perl;;
+	py) trycmd python;;
+	lisp) trycmd clisp;;
+	rb) trycmd ruby;;
+	tcl) trycmd tclsh;;
+	m4) trycmd m4;;
+	*) false;;
+	esac
+}
+
+# ----- start of mainline code
+for fn in "$@"; do
+	if has_compiler "$fn"; then
+		echo "$fn";
+	else
+		echo 1>&2 "# $fn has no compiler on this system; skipping"
+	fi
+done
