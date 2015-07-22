@@ -24,10 +24,10 @@ FILES := \
 	ego.awk \
 	ego.mf
 
-DOABLE_FILES := $(shell hascomp $(FILES))
+DOABLE_FILES := $(shell ./hascomp $(FILES))
 
 FILE_TARGETS := $(DOABLE_FILES:%=%.cmp)
-GEN_TARGETS := $(patsubst eg.%_desc, gen_%, $(shell hascomp $(wildcard eg.*_desc)))
+GEN_TARGETS := $(patsubst eg.%_desc, gen_%, $(shell ./hascomp $(wildcard eg.*_desc)))
 
 all: manual generated ppongs;
 
@@ -45,7 +45,7 @@ gen_%: eg.%_desc
 %.ppong: %
 	$(PPTESTER) $<
 
-PPFILE=$(if $(shell hascomp ppong.c),ppong.c.ppong,)
+PPFILE=$(if $(shell ./hascomp ppong.c),ppong.c.ppong,)
 
 ppongs: $(PPFILE)
 
