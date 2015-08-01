@@ -50,4 +50,5 @@ compile_and_run()
 	return 0
 }
 
+# ----- start of mainline code
 compile_and_run "$1"

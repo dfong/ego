@@ -11,6 +11,7 @@ PPTESTER=./pptest
 .PHONY: %.cmp gen_%
 
 FILES := \
+	pure-ego.c \
 	ego.c \
 	ego.cpp \
 	ego.pl \
