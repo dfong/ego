@@ -15,3 +15,5 @@ the eggen script uses a language description file (eg.LANGSUFFIX_desc)
 to produce a self-printing program (not necessarily the shortest),
 in a variety of languages.
 
+pure-ego.c is a pure-c program (no hardcoded ascii constants).
+
