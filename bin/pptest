@@ -1,0 +1,12 @@
+#! /bin/bash
+#	pptest SRC
+# run test of pingpong program - SRC
+
+src=$1
+base=${src%.*}
+gen=gen_$src
+
+PROGDIR=$(cd -P "$(dirname "$0")" && /bin/pwd -P)
+
+"$PROGDIR/xrun" $src > $gen && "$PROGDIR/xrun" $gen > $base.out
+cmp $src $base.out && ! cmp -s $src $gen

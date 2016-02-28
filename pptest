@@ -1,9 +1,0 @@
-#! /bin/bash
-#	pptest SRC
-
-src=$1
-base=${src%.*}
-gen=gen_$src
-
-./xrun $src > $gen && ./xrun $gen > $base.out
-cmp $src $base.out && ! cmp -s $src $gen

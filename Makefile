@@ -2,10 +2,11 @@
 
 default: all clean
 
-RUN=./xrun
-GEN=./eggen
-TESTER=./egtest
-PPTESTER=./pptest
+BIN=./bin
+RUN=$(BIN)/xrun
+GEN=$(BIN)/eggen
+TESTER=$(BIN)/egtest
+PPTESTER=$(BIN)/pptest
 
 .PHONY: default all clean cppong table gentest manual generated
 .PHONY: %.cmp gen_%
@@ -25,10 +26,10 @@ FILES := \
 	ego.awk \
 	ego.mf
 
-DOABLE_FILES := $(shell ./hascomp $(FILES))
+DOABLE_FILES := $(shell $(BIN)/hascomp $(FILES))
 
 FILE_TARGETS := $(DOABLE_FILES:%=%.cmp)
-GEN_TARGETS := $(patsubst eg.%_desc, gen_%, $(shell ./hascomp $(wildcard eg.*_desc)))
+GEN_TARGETS := $(patsubst eg.%_desc, gen_%, $(shell $(BIN)/hascomp $(wildcard eg.*_desc)))
 
 all: manual generated ppongs;
 
@@ -46,7 +47,7 @@ gen_%: eg.%_desc
 %.ppong: %
 	$(PPTESTER) $<
 
-PPFILE=$(if $(shell ./hascomp ppong.c),ppong.c.ppong,)
+PPFILE=$(if $(shell $(BIN)/hascomp ppong.c),ppong.c.ppong,)
 
 ppongs: $(PPFILE)
 
