@@ -1,0 +1,5 @@
+special="\n
+call=s(${{i}},${{j}},${{c}})
+stsep=;
+rangelen=1
+template=[[function s(a,b,c){process.stdout.write("${{dna}}".substr(a,b)+String.fromCharCode(c));};${{calls}};]]

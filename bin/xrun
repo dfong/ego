@@ -45,6 +45,7 @@ compile_and_run()
 	rb) ruby $F;;
 	tcl) tclsh $F;;
 	m4) m4 $F;;
+	js) node $F;;
 	*) "error: unknown file type .$ext"; return 1;;
 	esac
 	return 0

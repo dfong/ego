@@ -33,6 +33,7 @@ has_compiler()
 	rb) trycmd ruby;;
 	tcl) trycmd tclsh;;
 	m4) trycmd m4;;
+	js) trycmd node;;
 	*) false;;
 	esac
 }
