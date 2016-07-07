@@ -6,3 +6,4 @@ obs
 *.dump
 *.beam
 *.exe
+gen_*.*

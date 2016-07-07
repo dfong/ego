@@ -51,8 +51,8 @@ PPFILE=$(if $(shell $(BIN)/hascomp ppong.c),ppong.c.ppong,)
 
 ppongs: $(PPFILE)
 
-table: clean
-	@wc -c $(FILES) | sort -n
+table: clean $(GEN_TARGETS)
+	@wc -c $(FILES) $(GEN_TARGETS:gen_%=gen_ego.%) | sort -n
 
 clean:
 	@echo "# cleaning up"
