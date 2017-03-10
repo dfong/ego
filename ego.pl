@@ -1,3 +1,3 @@
-$x=<DATA>;print$x,"__DATA__\n$x"
-__DATA__
-$x=<DATA>;print$x,"__DATA__\n$x"
+$x=<DATA>;print$x,"__END__\n$x"
+__END__
+$x=<DATA>;print$x,"__END__\n$x"
