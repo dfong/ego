@@ -1,3 +1,4 @@
+suffix=java
 special="\n
 call=s(${{i}},${{j}},${{c}})
 stsep=;

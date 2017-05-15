@@ -1,3 +1,4 @@
+suffix=js
 special="\n
 call=s(${{i}},${{j}},${{c}})
 stsep=;

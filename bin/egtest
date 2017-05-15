@@ -1,8 +1,28 @@
 #! /bin/bash
 # run a self-printing program and compare its output to itself.
+
+run_desc()
+{
+	local file=$1
+	local base=${file%.*}
+	local suffix=$(sed -n -e 's/^suffix=\(.*\)/\1/p' < "$file")
+	local out=gen_$base.$suffix
+
+	"$PROGDIR/eggen" < "$file" > "$out"
+	"$PROGDIR/xrun" "$out" | cmp - "$out"
+}
+
+# ----- start of mainline code
 PROGDIR=$(cd "$(dirname "$0")" && /bin/pwd)
-if [ ! -s "$@" ]; then
-	echo error: "$@" is empty
+FILE=$1
+if [ ! -s "$FILE" ]; then
+	echo error: "$FILE" is empty
 	exit 1
 fi
-"$PROGDIR/xrun" "$@" | cmp - "$@"
+
+case "$FILE" in
+*.desc)
+	run_desc "$FILE" ;;
+*)
+	"$PROGDIR/xrun" "$FILE" | cmp - "$FILE" ;;
+esac

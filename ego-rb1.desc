@@ -1,3 +1,4 @@
+suffix=rb
 fragsep=[[//]]
 template=[[x=DATA.read;puts x,"__END__\n",x//
 __END__

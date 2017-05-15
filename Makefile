@@ -1,6 +1,6 @@
 # test the self-printing programs in various languages
 
-default: all clean
+default: all
 
 BIN=./bin
 RUN=$(BIN)/xrun
@@ -11,38 +11,19 @@ PPTESTER=$(BIN)/pptest
 .PHONY: default all clean cppong table gentest manual generated
 .PHONY: %.cmp gen_%
 
-FILES := \
-	pure-ego.c \
-	ego.c \
-	ego.cpp \
-	ego.pl \
-	ego.py \
-	ego.rb \
-	ego.java \
-	ego.erl \
-	ego.go \
-	ego.bash \
-	ego.tcl \
-	ego.awk \
-	ego.mf
+FILES := $(filter-out %.exe %.class %-notyet, $(wildcard ego*))
 
 DOABLE_FILES := $(shell $(BIN)/hascomp $(FILES))
 
 FILE_TARGETS := $(DOABLE_FILES:%=%.cmp)
-GEN_TARGETS := $(patsubst eg.%_desc, gen_%, $(shell $(BIN)/hascomp $(wildcard eg.*_desc)))
 
 all: manual generated ppongs;
 
 manual: $(FILE_TARGETS)
 
-generated: $(GEN_TARGETS)
-
 # pattern rule to compile/run a test on a given source file
 %.cmp: %
 	$(TESTER) $<
-
-gen_%: eg.%_desc
-	$(GEN) < $< > ${@:gen_%=gen_ego.%} && $(TESTER) ${@:gen_%=gen_ego.%}
 
 %.ppong: %
 	$(PPTESTER) $<
@@ -51,8 +32,10 @@ PPFILE=$(if $(shell $(BIN)/hascomp ppong.c),ppong.c.ppong,)
 
 ppongs: $(PPFILE)
 
-table: clean $(GEN_TARGETS)
-	@wc -c $(FILES) $(GEN_TARGETS:gen_%=gen_ego.%) | sort -n
+table:
+	@wc -c $(filter-out %.desc, $(FILES)) gen_* \
+	| egrep -v '\.exe$$|\.o$$|\.class$$' \
+	| sort -n
 
 clean:
 	@echo "# cleaning up"

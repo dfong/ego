@@ -1,3 +1,4 @@
+suffix=go
 special="\n
 stsep=;
 call=S(${{i}},${{j}},${{c}})

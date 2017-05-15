@@ -15,9 +15,15 @@ trycmd()
 	which $1 >/dev/null 2>&1
 }
 
+fetchsuf()
+{
+	sed -n -e 's/^suffix=\(.*\)/\1/p' < "$1"
+}
+
 has_compiler()
 {
 	case $(get_ext "$1") in
+	desc) has_compiler "$(fetchsuf "$1")";;
 	awk) trycmd awk;;
 	bash) trycmd bash;;
 	c) trycmd cc;;

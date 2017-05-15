@@ -1,3 +1,4 @@
+suffix=pl
 fragsep=[[//]]
 template=[[$x=<DATA>;print$x,"__DATA__\n$x"//
 __DATA__

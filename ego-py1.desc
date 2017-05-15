@@ -1,3 +1,4 @@
+suffix=py
 special="\n
 call=S(${{i}},${{j}},${{c}})
 stsep=;

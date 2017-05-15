@@ -1,3 +1,4 @@
+suffix=groovy
 special="\n
 call=S(${{i}},${{j}},${{c}})
 stsep=;

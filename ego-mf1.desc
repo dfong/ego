@@ -1,3 +1,4 @@
+suffix=mf
 fragsep=[[//]]
 template=[[.PHONY: x
 x:;@true//

@@ -1,3 +1,4 @@
+suffix=tcl
 stsep=;
 inclusive=1
 call=[[S ${{i}} ${{j}} ${{c}}]]
